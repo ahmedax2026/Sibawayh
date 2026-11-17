@@ -1,7 +1,7 @@
 name: Verify backend and build Android trial
 on:
   push:
-    branches: [main]
+    branches: [main, 'demo/offline-v1']
   pull_request:
   workflow_dispatch:
 permissions:
@@ -47,7 +47,7 @@ jobs:
       - run: gradle -p android :app:assembleDebug :app:lintDebug --no-daemon
       - uses: actions/upload-artifact@v4
         with:
-          name: Sibawayh-Android-Trial
+          name: Sibawayh-Offline-Demo-V1
           path: android/app/build/outputs/apk/debug/*.apk
       - uses: actions/upload-artifact@v4
         if: always()
