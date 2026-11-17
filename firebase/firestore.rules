@@ -1,0 +1,29 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() { return request.auth != null; }
+    function owner() { return signedIn() && request.auth.token.owner == true; }
+    function active() {
+      return signedIn() && exists(/databases/$(database)/documents/subscriptions/$(request.auth.uid))
+        && get(/databases/$(database)/documents/subscriptions/$(request.auth.uid)).data.enabled == true
+        && get(/databases/$(database)/documents/subscriptions/$(request.auth.uid)).data.expiresAt > request.time;
+    }
+    match /subscriptions/{uid} {
+      allow read: if owner() || (signedIn() && request.auth.uid == uid);
+      allow write: if owner();
+    }
+    match /sections/{id} {
+      allow read: if owner() || active();
+      allow write: if owner();
+      match /lessons/{lesson} {
+        allow read: if owner() || active();
+        allow write: if owner();
+      }
+    }
+    match /branding/{id} {
+      allow read: if signedIn();
+      allow write: if owner();
+    }
+    match /{document=**} { allow read, write: if false; }
+  }
+}
