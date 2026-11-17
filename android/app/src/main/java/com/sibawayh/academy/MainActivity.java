@@ -60,6 +60,12 @@ public class MainActivity extends Activity {
         getWindow().setStatusBarColor(Color.rgb(23,22,21));
         getWindow().setNavigationBarColor(Color.rgb(23,22,21));
         root = new FrameLayout(this);
+        if(android.os.Build.VERSION.SDK_INT>=30){
+            root.setOnApplyWindowInsetsListener((v,insets)->{
+                android.graphics.Insets bars=insets.getInsets(android.view.WindowInsets.Type.systemBars());
+                v.setPadding(bars.left,bars.top,bars.right,bars.bottom);return insets;
+            });
+        }
         setContentView(root);
         web = new WebView(this);
         root.addView(web, new FrameLayout.LayoutParams(-1,-1));
