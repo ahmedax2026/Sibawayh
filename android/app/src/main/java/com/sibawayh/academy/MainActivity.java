@@ -156,7 +156,7 @@ public class MainActivity extends Activity {
         gate=new LinearLayout(this);gate.setOrientation(LinearLayout.VERTICAL);gate.setGravity(Gravity.CENTER);gate.setPadding(40,50,40,50);gate.setBackgroundColor(Color.rgb(250,247,240));
         gateText=new TextView(this);gateText.setTextSize(21);gateText.setGravity(Gravity.CENTER);gateText.setTextColor(Color.rgb(45,36,23));
         gate.addView(gateText,new LinearLayout.LayoutParams(-1,-2));
-        Button retry=new Button(this);retry.setText("إعادة التحقق");retry.setOnClickListener(v->{if(watchUrl.isEmpty()){hideGate();web.loadUrl(origin);}else enforce();});gate.addView(retry);
+        Button retry=new Button(this);retry.setText("إعادة التحقق");retry.setOnClickListener(v->{if(blockReason().isEmpty() || watchUrl.isEmpty()){blocked=false;hideGate();web.loadUrl(watchUrl.isEmpty()?origin:watchUrl);}else enforce();});gate.addView(retry);
         Button back=new Button(this);back.setText("العودة للرئيسية");back.setOnClickListener(v->{watchUrl="";blocked=false;hideGate();web.loadUrl(origin);});gate.addView(back);
         gate.setVisibility(View.GONE);root.addView(gate,new FrameLayout.LayoutParams(-1,-1));
     }
@@ -167,7 +167,7 @@ public class MainActivity extends Activity {
             AudioManager audio=(AudioManager)getSystemService(AUDIO_SERVICE);
             for(AudioDeviceInfo d:audio.getDevices(AudioManager.GET_DEVICES_OUTPUTS)){
                 int t=d.getType();
-                if(t==AudioDeviceInfo.TYPE_WIRED_HEADPHONES||t==AudioDeviceInfo.TYPE_WIRED_HEADSET||t==AudioDeviceInfo.TYPE_USB_HEADSET||t==AudioDeviceInfo.TYPE_BLUETOOTH_A2DP||t==AudioDeviceInfo.TYPE_BLUETOOTH_SCO||t==AudioDeviceInfo.TYPE_HEARING_AID||t==26||t==27)return true;
+                if(t==AudioDeviceInfo.TYPE_WIRED_HEADPHONES||t==AudioDeviceInfo.TYPE_WIRED_HEADSET||t==AudioDeviceInfo.TYPE_USB_HEADSET||t==AudioDeviceInfo.TYPE_BLUETOOTH_A2DP||t==AudioDeviceInfo.TYPE_BLUETOOTH_SCO||t==AudioDeviceInfo.TYPE_HEARING_AID||t==26)return true;
             }
         }catch(Exception e){return false;}
         return false;
